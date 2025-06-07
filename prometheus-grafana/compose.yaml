@@ -29,6 +29,7 @@ services:
       - 100.64.0.2:3000:3000
     restart: unless-stopped
     environment:
+      GF_SERVER_ROOT_URL: http://hz.ts.zxczxc.org:3000/
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: grafana
       GF_RENDERING_SERVER_URL: http://renderer:8081/render
@@ -58,6 +59,7 @@ services:
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
+
 volumes:
   prom_data:
     driver: local
