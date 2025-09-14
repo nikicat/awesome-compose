@@ -29,10 +29,33 @@ services:
       - 3000:3000
     restart: unless-stopped
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=grafana
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: grafana
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_ALERTING_ENABLED: 'false'
+      GF_UNIFIED_ALERTING_ENABLED: 'true'
+      GF_UNIFIED_ALERTING_SCREENSHOTS_CAPTURE: 'true'
+      GF_UNIFIED_ALERTING_EVALUATION_TIMEOUT: 90s
+      GF_UNIFIED_ALERTING_SCREENSHOTS_CAPTURE_TIMEOUT: 30s
+      GF_LOG_FILTERS: rendering:debug
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
       - ./grafana.db:/var/lib/grafana/grafana.db
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    ports:
+      - 8081
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    userns_mode: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
 volumes:
   prom_data:
