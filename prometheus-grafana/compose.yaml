@@ -42,7 +42,7 @@ services:
       GF_LOG_FILTERS: rendering:debug
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
-      - ./grafana.db:/var/lib/grafana/grafana.db
+      - ${GRAFANA_DB_PATH:-./grafana.db}:/var/lib/grafana/grafana.db
   renderer:
     image: grafana/grafana-image-renderer:latest
     ports:
